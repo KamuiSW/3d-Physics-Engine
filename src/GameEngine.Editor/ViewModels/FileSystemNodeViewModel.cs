@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,11 +11,13 @@ namespace GameEngine.Editor.ViewModels
     {
         private readonly string _fullPath;
         private bool _isExpanded;
+        private readonly ObservableCollection<FileSystemNodeViewModel> _children = new();
+        private bool _isLoaded;
 
-        public string Name => Path.GetFileName(_fullPath);
+        public string Name => Path.GetFileName(_fullPath) ?? _fullPath;
         public string FullPath => _fullPath;
         public bool IsDirectory => Directory.Exists(_fullPath);
-        public ObservableCollection<FileSystemNodeViewModel> Children { get; } = new();
+        public ObservableCollection<FileSystemNodeViewModel> Children => _children;
         public string Icon => IsDirectory ? "resm:GameEngine.Editor.Assets.folder.png" 
                                        : "resm:GameEngine.Editor.Assets.file.png";
 
@@ -27,8 +30,10 @@ namespace GameEngine.Editor.ViewModels
                 {
                     _isExpanded = value;
                     OnPropertyChanged();
-                    if (IsExpanded && IsDirectory)
+                    if (_isExpanded && !_isLoaded)
+                    {
                         LoadChildren();
+                    }
                 }
             }
         }
@@ -36,25 +41,39 @@ namespace GameEngine.Editor.ViewModels
         public FileSystemNodeViewModel(string path)
         {
             _fullPath = path;
-            if (IsDirectory)
-                Children.Add(new FileSystemNodeViewModel("dummy")); // Placeholder
+            if (IsDirectory && !_isLoaded)
+            {
+                // Add dummy node to show expand arrow
+                _children.Add(new FileSystemNodeViewModel(Path.Combine(path, "dummy")));
+            }
         }
 
         private void LoadChildren()
         {
-            Children.Clear();
+            if (!IsDirectory || _isLoaded) return;
+
+            _children.Clear();
             try
             {
+                // Add directories first
                 foreach (var dir in Directory.GetDirectories(_fullPath))
                 {
-                    Children.Add(new FileSystemNodeViewModel(dir));
+                    _children.Add(new FileSystemNodeViewModel(dir));
                 }
+
+                // Then add files
                 foreach (var file in Directory.GetFiles(_fullPath))
                 {
-                    Children.Add(new FileSystemNodeViewModel(file));
+                    _children.Add(new FileSystemNodeViewModel(file));
                 }
+
+                _isLoaded = true;
             }
-            catch { /* Handle access errors */ }
+            catch (Exception ex)
+            {
+                // Handle access denied or other IO exceptions
+                System.Diagnostics.Debug.WriteLine($"Error loading directory {_fullPath}: {ex.Message}");
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

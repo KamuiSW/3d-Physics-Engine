@@ -1,18 +1,62 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:GameEngine.Editor.Controls"
+             xmlns:vm="clr-namespace:GameEngine.Editor.ViewModels"
              x:Class="GameEngine.Editor.Controls.ProjectFilesPanel">
     <DockPanel LastChildFill="True">
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="5">
-            <Button Content="Refresh" Command="{Binding RefreshCommand}" />
-            <Button Content="Collapse All" Command="{Binding CollapseAllCommand}" />
+        <!-- Toolbar -->
+        <StackPanel DockPanel.Dock="Top" 
+                    Orientation="Horizontal" 
+                    Spacing="5"
+                    Margin="5">
+            <Button Command="{Binding RefreshCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="{StaticResource refresh_regular}"/>
+                    <TextBlock Text="Refresh"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding CollapseAllCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <PathIcon Data="{StaticResource collapse_all_regular}"/>
+                    <TextBlock Text="Collapse All"/>
+                </StackPanel>
+            </Button>
         </StackPanel>
-        <TreeView ItemsSource="{Binding RootNodes}">
+
+        <!-- File Tree -->
+        <TreeView ItemsSource="{Binding RootNodes}"
+                  Background="Transparent"
+                  Margin="0">
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                    <TextBlock Text="{Binding Name}" />
-                </HierarchicalDataTemplate>
+                <TreeDataTemplate ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal" 
+                               Spacing="5">
+                        <PathIcon Data="{StaticResource folder_regular}"
+                                 IsVisible="{Binding IsDirectory}"/>
+                        <PathIcon Data="{StaticResource document_regular}"
+                                 IsVisible="{Binding !IsDirectory}"/>
+                        <TextBlock Text="{Binding Name}" 
+                                 VerticalAlignment="Center"/>
+                    </StackPanel>
+                </TreeDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
     </DockPanel>
+
+    <UserControl.Styles>
+        <Style Selector="TreeView">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style Selector="TreeViewItem">
+            <Setter Property="Padding" Value="4"/>
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="Padding" Value="8 4"/>
+            <Setter Property="Background" Value="#2D2D2D"/>
+        </Style>
+        <Style Selector="PathIcon">
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Height" Value="16"/>
+        </Style>
+    </UserControl.Styles>
 </UserControl> 

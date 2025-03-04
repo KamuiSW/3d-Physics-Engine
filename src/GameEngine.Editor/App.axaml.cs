@@ -1,23 +1,13 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using GameEngine.Core.Project;
+using GameEngine.Editor.Views;
+using GameEngine.Editor.ViewModels;
 
 namespace GameEngine.Editor
 {
-    public partial class App : Application
+    public class App : Application
     {
-        private ProjectMetadata? _projectMetadata;
-
-        public App()
-        {
-        }
-
-        public App(ProjectMetadata projectMetadata)
-        {
-            _projectMetadata = projectMetadata;
-        }
-
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
@@ -27,9 +17,10 @@ namespace GameEngine.Editor
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = _projectMetadata != null 
-                    ? new MainEditorWindow(_projectMetadata)
-                    : new MainEditorWindow();
+                desktop.MainWindow = new MainEditorWindow
+                {
+                    DataContext = new MainWindowViewModel()
+                };
             }
 
             base.OnFrameworkInitializationCompleted();

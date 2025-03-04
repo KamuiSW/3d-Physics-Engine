@@ -5,7 +5,7 @@
         Title="Game Engine Editor"
         WindowState="Maximized">
 
-    <Grid RowDefinitions="Auto,Auto,*,Auto">
+    <Grid RowDefinitions="Auto,Auto,*,250,Auto">
         <!-- Main Menu -->
         <Menu Grid.Row="0">
             <MenuItem Header="File">
@@ -43,7 +43,7 @@
                     BorderBrush="{DynamicResource SystemControlHighlightBaseMediumLowBrush}"
                     BorderThickness="0,0,1,0">
                 <Grid RowDefinitions="Auto,*">
-                    <TextBlock Text="Hierarchy" 
+                    <TextBlock Text="Hierachy" 
                              Margin="10,5"
                              FontWeight="Bold"/>
                     <TreeView Grid.Row="1" 
@@ -85,8 +85,21 @@
             </Border>
         </Grid>
 
+        <!-- Bottom Panel with Tabs -->
+        <TabControl Grid.Row="3" Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+            <TabItem Header="Files">
+                <controls:ProjectFilesPanel DataContext="{Binding ProjectFiles}"/>
+            </TabItem>
+            <TabItem Header="Output">
+                <TextBlock Text="Output Window" Margin="10"/>
+            </TabItem>
+            <TabItem Header="Console">
+                <TextBlock Text="Console Window" Margin="10"/>
+            </TabItem>
+        </TabControl>
+
         <!-- Status Bar -->
-        <Grid Grid.Row="3" Height="25" Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+        <Grid Grid.Row="4" Height="25" Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
             <TextBlock Text="{Binding StatusMessage}" Margin="10,0" VerticalAlignment="Center"/>
         </Grid>
     </Grid>
