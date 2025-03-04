@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:GameEngine.Editor.Controls"
+             x:Class="GameEngine.Editor.Controls.ProjectFilesPanel">
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="5">
+            <Button Content="Refresh" Command="{Binding RefreshCommand}" />
+            <Button Content="Collapse All" Command="{Binding CollapseAllCommand}" />
+        </StackPanel>
+        <TreeView ItemsSource="{Binding RootNodes}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Name}" />
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </DockPanel>
+</UserControl> 

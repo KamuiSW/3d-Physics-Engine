@@ -1,0 +1,12 @@
+<DockPanel xmlns="https://github.com/avaloniaui"
+           xmlns:controls="clr-namespace:GameEngine.Editor.Controls">
+    <!-- Other panels... -->
+    <ContentControl DockPanel.Dock="Left" Width="250"
+                    Content="{Binding ProjectFiles}">
+        <ContentControl.ContentTemplate>
+            <DataTemplate>
+                <controls:ProjectFilesPanel />
+            </DataTemplate>
+        </ContentControl.ContentTemplate>
+    </ContentControl>
+</DockPanel> 
