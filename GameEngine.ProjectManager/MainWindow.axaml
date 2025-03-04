@@ -1,0 +1,79 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GameEngine.ProjectManager.MainWindow"
+        Title="Game Engine Project Manager"
+        Width="1000" Height="600"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid RowDefinitions="Auto,*">
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="20" Spacing="10">
+            <TextBlock Text="Game Engine Project Manager" 
+                     FontSize="24" 
+                     FontWeight="Bold"/>
+            <TextBlock Text="Create or manage your game projects" 
+                     Opacity="0.7"/>
+        </StackPanel>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" ColumnDefinitions="300,*" Margin="20">
+            <!-- Left Panel - Actions -->
+            <Border Grid.Column="0" 
+                    BorderBrush="{DynamicResource SystemControlHighlightBaseMediumLowBrush}" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Margin="0,0,10,0">
+                <StackPanel Margin="20" Spacing="10">
+                    <Button Name="NewProjectButton" 
+                            Click="OnNewProject"
+                            HorizontalAlignment="Stretch">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <PathIcon Data="{StaticResource plus_regular}"/>
+                            <TextBlock Text="New Project"/>
+                        </StackPanel>
+                    </Button>
+                    
+                    <Button Name="OpenProjectButton" 
+                            Click="OnOpenProject"
+                            HorizontalAlignment="Stretch">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <PathIcon Data="{StaticResource folder_open_regular}"/>
+                            <TextBlock Text="Open Project"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- Right Panel - Recent Projects -->
+            <Border Grid.Column="1" 
+                    BorderBrush="{DynamicResource SystemControlHighlightBaseMediumLowBrush}" 
+                    BorderThickness="1" 
+                    CornerRadius="8" 
+                    Margin="10,0,0,0">
+                <Grid RowDefinitions="Auto,*" Margin="20">
+                    <TextBlock Text="Recent Projects" 
+                             FontSize="18" 
+                             FontWeight="SemiBold" 
+                             Grid.Row="0"/>
+                    
+                    <ListBox Grid.Row="1" 
+                            Margin="0,10,0,0"
+                            Items="{Binding RecentProjects}"
+                            SelectionChanged="OnProjectSelected">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Spacing="5">
+                                    <TextBlock Text="{Binding Name}" 
+                                             FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding ProjectPath}" 
+                                             FontSize="12" 
+                                             Opacity="0.7"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window> 

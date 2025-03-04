@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GameEngine.Editor.Panels.InspectorPanel">
+    <ScrollViewer>
+        <StackPanel Margin="10">
+            <!-- Header -->
+            <TextBlock Text="{Binding SelectedObject.Name, FallbackValue='No Object Selected'}"
+                     FontWeight="Bold"
+                     FontSize="16"
+                     Margin="0,0,0,10"/>
+
+            <!-- Object Properties -->
+            <Grid IsVisible="{Binding HasSelectedObject}"
+                  RowDefinitions="Auto,Auto"
+                  ColumnDefinitions="Auto,*"
+                  Margin="0,0,0,10">
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Name" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedObject.Name}" Margin="5,0,0,0"/>
+                
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Active" VerticalAlignment="Center"/>
+                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding SelectedObject.IsActive}" Margin="5,5,0,0"/>
+            </Grid>
+
+            <!-- Components -->
+            <ItemsControl Items="{Binding Components}"
+                         IsVisible="{Binding HasSelectedObject}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Expander Header="{Binding Header}" Margin="0,0,0,5">
+                            <ContentControl Content="{Binding Editor}"/>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Add Component Button -->
+            <Button Command="{Binding AddComponentCommand}"
+                    IsVisible="{Binding HasSelectedObject}"
+                    HorizontalAlignment="Stretch"
+                    Margin="0,10,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <PathIcon Data="{StaticResource plus_regular}"/>
+                    <TextBlock Text="Add Component" Margin="5,0,0,0"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl> 

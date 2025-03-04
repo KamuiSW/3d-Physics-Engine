@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:GameEngine.Editor.ViewModels"
+             x:Class="GameEngine.Editor.Controls.HierarchyPanel"
+             x:DataType="vm:HierarchyViewModel">
+  <Border Background="#2D2D30">
+    <TreeView ItemsSource="{Binding SceneObjects}"
+              SelectedItem="{Binding SelectedObject}">
+      <TreeView.DataTemplates>
+        <TreeDataTemplate DataType="vm:SceneObjectViewModel"
+                          ItemsSource="{Binding Children}">
+          <TextBlock Text="{Binding Name}" Foreground="White"/>
+        </TreeDataTemplate>
+      </TreeView.DataTemplates>
+    </TreeView>
+  </Border>
+</UserControl> 

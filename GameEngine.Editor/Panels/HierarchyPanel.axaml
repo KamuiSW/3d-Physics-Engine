@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:scene="clr-namespace:GameEngine.Core.Scene;assembly=GameEngine.Core"
+             x:Class="GameEngine.Editor.Panels.HierarchyPanel">
+    <Grid RowDefinitions="Auto,*">
+        <!-- Toolbar -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
+            <Button Command="{Binding CreateGameObjectCommand}" ToolTip.Tip="Create GameObject">
+                <PathIcon Data="{StaticResource plus_regular}"/>
+            </Button>
+            <Button Command="{Binding DeleteSelectedCommand}" 
+                    Margin="5,0,0,0"
+                    ToolTip.Tip="Delete Selected">
+                <PathIcon Data="{StaticResource delete_regular}"/>
+            </Button>
+        </StackPanel>
+
+        <!-- Tree View -->
+        <TreeView Grid.Row="1" 
+                  Name="SceneTreeView"
+                  Items="{Binding Scene.RootObjects}"
+                  SelectedItem="{Binding SelectedGameObject}">
+            <TreeView.ItemTemplate>
+                <TreeDataTemplate ItemsSource="{Binding Children}">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <CheckBox Grid.Column="0" 
+                                 IsChecked="{Binding IsActive}"
+                                 Margin="0,0,5,0"/>
+                        <TextBlock Grid.Column="1" 
+                                 Text="{Binding Name}"/>
+                    </Grid>
+                </TreeDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</UserControl> 

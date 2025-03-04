@@ -1,0 +1,58 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GameEngine.ProjectManager.ProjectWizardWindow"
+        Title="Create New Project"
+        Width="600" Height="400"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Spacing="10">
+            <TextBlock Text="Create New Project" 
+                     FontSize="24" 
+                     FontWeight="Bold"/>
+            <TextBlock Text="Configure your new game project" 
+                     Opacity="0.7"/>
+        </StackPanel>
+
+        <!-- Form -->
+        <StackPanel Grid.Row="1" Margin="0,20" Spacing="15">
+            <StackPanel Spacing="5">
+                <TextBlock Text="Project Name"/>
+                <TextBox Name="ProjectNameTextBox" />
+            </StackPanel>
+
+            <StackPanel Spacing="5">
+                <TextBlock Text="Description"/>
+                <TextBox Name="DescriptionTextBox" 
+                        Height="60"
+                        AcceptsReturn="True"/>
+            </StackPanel>
+
+            <StackPanel Spacing="5">
+                <TextBlock Text="Location"/>
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBox Name="LocationTextBox" 
+                            Grid.Column="0"
+                            IsReadOnly="True"/>
+                    <Button Grid.Column="1" 
+                            Content="Browse..." 
+                            Margin="5,0,0,0"
+                            Click="OnBrowseLocation"/>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Spacing="10">
+            <Button Content="Cancel" 
+                    Click="OnCancel"/>
+            <Button Content="Create" 
+                    Classes="accent"
+                    Click="OnCreate"/>
+        </StackPanel>
+    </Grid>
+</Window> 

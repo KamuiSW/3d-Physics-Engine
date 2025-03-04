@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GameEngine.Editor.Controls.ComponentViews.TransformView">
+    <StackPanel Spacing="4">
+        <TextBlock Text="Transform" FontWeight="Bold"/>
+        
+        <!-- Position -->
+        <StackPanel>
+            <TextBlock Text="Position" Margin="0,2"/>
+            <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*">
+                <TextBlock Text="X:" Grid.Column="0" VerticalAlignment="Center"/>
+                <NumericUpDown Grid.Column="1" Value="{Binding Position.X}" Increment="0.1"/>
+                <TextBlock Text="Y:" Grid.Column="2" VerticalAlignment="Center"/>
+                <NumericUpDown Grid.Column="3" Value="{Binding Position.Y}" Increment="0.1"/>
+                <TextBlock Text="Z:" Grid.Column="4" VerticalAlignment="Center"/>
+                <NumericUpDown Grid.Column="5" Value="{Binding Position.Z}" Increment="0.1"/>
+            </Grid>
+        </StackPanel>
+
+        <!-- Rotation -->
+        <StackPanel>
+            <TextBlock Text="Rotation" Margin="0,2"/>
+            <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*">
+                <TextBlock Text="X:" Grid.Column="0" VerticalAlignment="Center"/>
+                <NumericUpDown Grid.Column="1" Value="{Binding Rotation.X}" Increment="1"/>
+                <TextBlock Text="Y:" Grid.Column="2" VerticalAlignment="Center"/>
+                <NumericUpDown Grid.Column="3" Value="{Binding Rotation.Y}" Increment="1"/>
+                <TextBlock Text="Z:" Grid.Column="4" VerticalAlignment="Center"/>
+                <NumericUpDown Grid.Column="5" Value="{Binding Rotation.Z}" Increment="1"/>
+            </Grid>
+        </StackPanel>
+
+        <!-- Scale -->
+        <StackPanel>
+            <TextBlock Text="Scale" Margin="0,2"/>
+            <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*">
+                <TextBlock Text="X:" Grid.Column="0" VerticalAlignment="Center"/>
+                <NumericUpDown Grid.Column="1" Value="{Binding Scale.X}" Increment="0.1"/>
+                <TextBlock Text="Y:" Grid.Column="2" VerticalAlignment="Center"/>
+                <NumericUpDown Grid.Column="3" Value="{Binding Scale.Y}" Increment="0.1"/>
+                <TextBlock Text="Z:" Grid.Column="4" VerticalAlignment="Center"/>
+                <NumericUpDown Grid.Column="5" Value="{Binding Scale.Z}" Increment="0.1"/>
+            </Grid>
+        </StackPanel>
+    </StackPanel>
+</UserControl> 

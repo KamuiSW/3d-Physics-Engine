@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:GameEngine.Editor.ViewModels"
+             xmlns:cv="clr-namespace:GameEngine.Editor.Controls.ComponentViews"
+             x:Class="GameEngine.Editor.Controls.InspectorPanel">
+    <ScrollViewer>
+        <StackPanel Margin="8" Spacing="8">
+            <!-- Object Header -->
+            <StackPanel IsVisible="{Binding !!SelectedObject}">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <TextBlock Text="Name:" VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1" Text="{Binding SelectedObject.Name}" Margin="4,0,0,0"/>
+                    <CheckBox Grid.Column="2" IsChecked="{Binding SelectedObject.IsActive}" Content="Active" Margin="8,0,0,0"/>
+                </Grid>
+            </StackPanel>
+
+            <!-- Transform Component (always present) -->
+            <Expander Header="Transform" IsExpanded="True" Margin="0,0,0,4"
+                      IsVisible="{Binding !!SelectedObject}">
+                <cv:TransformView DataContext="{Binding TransformViewModel}"/>
+            </Expander>
+
+            <!-- Other Components -->
+            <ItemsControl ItemsSource="{Binding Components}" IsVisible="{Binding !!SelectedObject}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Expander Header="{Binding Name}" IsExpanded="True" Margin="0,0,0,4">
+                            <ContentControl Content="{Binding}"/>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- No Selection Message -->
+            <TextBlock Text="No object selected"
+                     IsVisible="{Binding !SelectedObject}"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     Opacity="0.5"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl> 

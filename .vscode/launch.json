@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (console)",
+            "name": "Launch Project Manager",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/GameEngine/bin/Debug/net6.0/GameEngine.dll",
+            "program": "${workspaceFolder}/src/GameEngine.ProjectManager/bin/Debug/net8.0/GameEngine.ProjectManager.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/GameEngine",
+            "cwd": "${workspaceFolder}/src/GameEngine.ProjectManager",
             "console": "internalConsole",
             "stopAtEntry": false
         }

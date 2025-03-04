@@ -1,0 +1,44 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:GameEngine.Editor.Controls"
+        x:Class="GameEngine.Editor.MainWindow"
+        Title="GameEngine Editor"
+        Width="1200" Height="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Menu -->
+        <Menu Grid.Row="0" Grid.ColumnSpan="3">
+            <MenuItem Header="File">
+                <MenuItem Header="New Scene"/>
+                <MenuItem Header="Open Scene"/>
+                <MenuItem Header="Save Scene"/>
+                <Separator/>
+                <MenuItem Header="Exit"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Undo"/>
+                <MenuItem Header="Redo"/>
+            </MenuItem>
+        </Menu>
+        
+        <!-- Hierarchy Panel -->
+        <controls:HierarchyPanel Grid.Row="1" Grid.Column="0"/>
+        
+        <!-- Scene View -->
+        <controls:SceneView Grid.Row="1" Grid.Column="1"/>
+        
+        <!-- Inspector Panel -->
+        <Border Grid.Row="1" Grid.Column="2" Background="#2D2D30">
+            <TextBlock Text="Inspector" Foreground="White" Margin="10"/>
+        </Border>
+    </Grid>
+</Window> 

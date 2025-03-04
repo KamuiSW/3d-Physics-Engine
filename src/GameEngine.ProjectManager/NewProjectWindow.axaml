@@ -1,0 +1,96 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GameEngine.ProjectManager.NewProjectWindow"
+        Title="Create New Project"
+        Width="600" Height="400"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Spacing="10">
+            <TextBlock Text="Create New Project" 
+                     FontSize="24" 
+                     FontWeight="Bold"/>
+            <TextBlock Text="Configure your new game project" 
+                     Opacity="0.7"/>
+        </StackPanel>
+
+        <!-- Form -->
+        <ScrollViewer Grid.Row="1" Margin="0,20,0,0">
+            <StackPanel Spacing="15">
+                <!-- Project Name -->
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Project Name"/>
+                    <TextBox Text="{Binding ProjectName}"
+                            Watermark="Enter project name"/>
+                    <TextBlock Text="{Binding ProjectNameError}"
+                             Foreground="Red"
+                             IsVisible="{Binding HasProjectNameError}"/>
+                </StackPanel>
+
+                <!-- Description -->
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Description"/>
+                    <TextBox Text="{Binding Description}"
+                            Height="60"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            Watermark="Enter project description (optional)"/>
+                </StackPanel>
+
+                <!-- Location -->
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Location"/>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBox Grid.Column="0"
+                                Text="{Binding Location}"
+                                Watermark="Select project location"
+                                IsReadOnly="True"/>
+                        <Button Grid.Column="1"
+                                Content="Browse..."
+                                Margin="5,0,0,0"
+                                Command="{Binding BrowseCommand}"/>
+                    </Grid>
+                    <TextBlock Text="{Binding LocationError}"
+                             Foreground="Red"
+                             IsVisible="{Binding HasLocationError}"/>
+                </StackPanel>
+
+                <!-- Template -->
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Template"/>
+                    <ComboBox ItemsSource="{Binding Templates}"
+                            SelectedItem="{Binding SelectedTemplate}"
+                            HorizontalAlignment="Stretch">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- Template Description -->
+                <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                        CornerRadius="4"
+                        Padding="10">
+                    <TextBlock Text="{Binding SelectedTemplate.Description}"
+                             TextWrapping="Wrap"/>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Spacing="10"
+                    Margin="0,20,0,0">
+            <Button Content="Cancel" 
+                    Command="{Binding CancelCommand}"/>
+            <Button Content="Create" 
+                    Command="{Binding CreateCommand}"
+                    Classes="accent"/>
+        </StackPanel>
+    </Grid>
+</Window> 
