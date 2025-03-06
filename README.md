@@ -1,6 +1,8 @@
-# 3D Physics Engine
+# Yu-Gong Engine
 
-A C#-based 3D game engine with realistic physics and Unity-like editor features.
+A C#-based physics/game engine
+I have always found physics and programming fun, and i have been creating games for quite a while now, 
+so i thought i could utilize both of my skills in physics and programming to create a physics engine.
 
 ## Project Structure
 
@@ -11,29 +13,25 @@ A C#-based 3D game engine with realistic physics and Unity-like editor features.
 ## Requirements
 
 - .NET 7.0 SDK
-- Visual Studio 2022 or JetBrains Rider (recommended)
+- Visual Studio 2022
 - OpenGL 4.5+ capable graphics card
 
 ## Building
 
 1. Clone the repository
-2. Open `3d-Physics-Engine.sln` in your IDE
+2. Open `3d-Physics-Engine.sln` in your IDE (recommand Visual studio code)
 3. Build the solution
 
 ```bash
 # Or build from command line
-dotnet build
+#F5 for visual studio code
+dotnet build 3d-Physics-Engine.sln
 ```
 
 ## Running
 
-1. Set `GameEngine.ProjectManager` as the startup project
-2. Run the application
-
-```bash
-# Or run from command line
-dotnet run --project src/GameEngine.ProjectManager/GameEngine.ProjectManager.csproj
-```
+1. Simply build it in Visual studio code
+2. Enjoy!
 
 ## Development
 

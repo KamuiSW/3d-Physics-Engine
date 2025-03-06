@@ -9,9 +9,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text.Json;
+using Avalonia.Interactivity;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 namespace GameEngine.ProjectManager
 {
@@ -20,9 +23,74 @@ namespace GameEngine.ProjectManager
         public NewProjectWindow()
         {
             InitializeComponent();
-            var vm = new NewProjectViewModel(this);
-            DataContext = vm;
-            vm.RequestClose += (s, e) => Close();
+            DataContext = this;
+        }
+
+        public string ProjectName { get; set; } = "New Project";
+        public string ProjectPath { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+        private async void OnCreateClicked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Debug.WriteLine("Create button clicked");
+                
+                // Validate inputs
+                if (string.IsNullOrWhiteSpace(ProjectName))
+                {
+                    Debug.WriteLine("Project name is empty");
+                    await MessageBoxManager
+                        .GetMessageBoxStandard("Error", "Project name cannot be empty", ButtonEnum.Ok)
+                        .ShowAsync();
+                    return;
+                }
+
+                var fullPath = Path.Combine(ProjectPath, ProjectName);
+                Debug.WriteLine($"Creating project at: {fullPath}");
+
+                if (Directory.Exists(fullPath))
+                {
+                    Debug.WriteLine("Directory already exists");
+                    await MessageBoxManager
+                        .GetMessageBoxStandard("Error", "Project directory already exists", ButtonEnum.Ok)
+                        .ShowAsync();
+                    return;
+                }
+
+                // Create directory structure
+                Directory.CreateDirectory(fullPath);
+                Debug.WriteLine("Directory created");
+                
+                // Create project file
+                var projectFile = Path.Combine(fullPath, $"{ProjectName}.gproj");
+                var metadata = new ProjectMetadata
+                {
+                    Name = ProjectName,
+                    ProjectPath = fullPath,
+                    CreatedDate = DateTime.Now
+                };
+                
+                await File.WriteAllTextAsync(projectFile, 
+                    System.Text.Json.JsonSerializer.Serialize(metadata, 
+                    new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+                
+                Debug.WriteLine("Project file created");
+                Close(metadata);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error creating project: {ex}");
+                await MessageBoxManager
+                    .GetMessageBoxStandard("Error", $"Failed to create project: {ex.Message}", ButtonEnum.Ok)
+                    .ShowAsync();
+                Close(null);
+            }
+        }
+
+        private void OnCancelClicked(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Project creation cancelled by user");
+            Close(null);
         }
     }
 

@@ -26,6 +26,8 @@ namespace GameEngine.Core.Project
         [JsonProperty("projectPath")]
         public string ProjectPath { get; set; } = string.Empty;
 
+        public DateTime CreatedDate { get; set; }
+
         public ProjectMetadata()
         {
             Created = DateTime.UtcNow;

@@ -30,7 +30,7 @@ namespace GameEngine.ProjectManager
                 {
                     _recentProjects = value;
                     OnPropertyChanged();
-                    Debug.WriteLine($"RecentProjects updated. Count: {_recentProjects?.Count ?? 0}");
+                    Debug.WriteLine($"RecentProjects collection replaced. New count: {_recentProjects?.Count ?? 0}");
                 }
             }
         }
@@ -40,7 +40,9 @@ namespace GameEngine.ProjectManager
             InitializeComponent();
             _projectService = new ProjectService();
             _recentProjects = new ObservableCollection<ProjectMetadata>();
-            DataContext = this;
+            
+            this.DataContext = this;
+            
             LoadRecentProjects();
             Debug.WriteLine($"MainWindow initialized. Projects count: {_recentProjects.Count}");
         }
@@ -120,74 +122,46 @@ namespace GameEngine.ProjectManager
 
         private async void OnNewProject(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("Creating new project...");
-            var wizard = new NewProjectWindow();
-            var result = await wizard.ShowDialog<ProjectMetadata>(this);
-            
-            if (result != null)
+            try
             {
-                Debug.WriteLine($"New project created: {result.Name} at {result.ProjectPath}");
+                Debug.WriteLine("=== NEW PROJECT FLOW STARTED ===");
+                var wizard = new NewProjectWindow();
+                Debug.WriteLine("Showing project creation dialog...");
+                var result = await wizard.ShowDialog<ProjectMetadata>(this);
                 
-                try
+                if (result == null)
                 {
-                    // Ensure the project is properly loaded
-                    var loadedProject = await _projectService.LoadProjectAsync(result.ProjectPath);
-                    if (loadedProject != null)
-                    {
-                        Debug.WriteLine("Project loaded successfully after creation");
-                        AddToRecentProjects(loadedProject);
-                        
-                        // Force UI refresh
-                        var temp = _recentProjects.ToList();
-                        _recentProjects.Clear();
-                        foreach (var proj in temp)
-                        {
-                            _recentProjects.Add(proj);
-                        }
-                        
-                        LaunchEditor(loadedProject);
-                    }
-                    else
-                    {
-                        Debug.WriteLine("Failed to load newly created project, using original result");
-                        AddToRecentProjects(result);
-                        
-                        // Force UI refresh
-                        var temp = _recentProjects.ToList();
-                        _recentProjects.Clear();
-                        foreach (var proj in temp)
-                        {
-                            _recentProjects.Add(proj);
-                        }
-                        
-                        LaunchEditor(result);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error loading new project: {ex.Message}");
-                    AddToRecentProjects(result);
-                    
-                    // Force UI refresh
-                    var temp = _recentProjects.ToList();
-                    _recentProjects.Clear();
-                    foreach (var proj in temp)
-                    {
-                        _recentProjects.Add(proj);
-                    }
-                    
-                    LaunchEditor(result);
+                    Debug.WriteLine("Project creation was cancelled");
+                    return;
                 }
 
-                // Save immediately after adding
-                SaveRecentProjects();
+                Debug.WriteLine($"Received project metadata: {result.Name} | {result.ProjectPath}");
+                Debug.WriteLine($"Validating project directory: {result.ProjectPath}");
                 
-                // Reload the list to ensure it's displayed
-                LoadRecentProjects();
+                if (!Directory.Exists(result.ProjectPath))
+                {
+                    Debug.WriteLine("ERROR: Project directory does not exist!");
+                    var messageBox = MessageBoxManager
+                        .GetMessageBoxStandard("Error", "Project directory was not created properly", ButtonEnum.Ok);
+                    await messageBox.ShowAsync();
+                    return;
+                }
+
+                Debug.WriteLine("Project directory validation successful");
+                Debug.WriteLine("Attempting to add project to recent list...");
+                
+                AddToRecentProjects(result);
+                Debug.WriteLine("Project added to recent list");
+                
+                Debug.WriteLine("Launching editor...");
+                LaunchEditor(result);
             }
-            else
+            catch (Exception ex)
             {
-                Debug.WriteLine("Project creation cancelled or failed");
+                Debug.WriteLine($"!!! CRITICAL ERROR IN NEW PROJECT FLOW: {ex.ToString()}");
+                var messageBox = MessageBoxManager
+                    .GetMessageBoxStandard("Fatal Error", $"Project creation failed: {ex.Message}", ButtonEnum.Ok);
+                await messageBox.ShowAsync();
             }
         }
 
@@ -223,28 +197,39 @@ namespace GameEngine.ProjectManager
 
         private void AddToRecentProjects(ProjectMetadata project)
         {
-            Debug.WriteLine($"Adding project to recent list: {project.Name}");
-            
-            // Remove existing project with same path if exists
-            var existing = _recentProjects.FirstOrDefault(p => p.ProjectPath == project.ProjectPath);
-            if (existing != null)
+            try
             {
-                Debug.WriteLine("Removing existing project with same path");
-                _recentProjects.Remove(existing);
+                Debug.WriteLine($"Adding project: {project.Name}");
+                Debug.WriteLine($"Current recent projects count: {_recentProjects.Count}");
+                
+                var existing = _recentProjects.FirstOrDefault(p => p.ProjectPath == project.ProjectPath);
+                if (existing != null)
+                {
+                    Debug.WriteLine($"Removing existing project: {existing.Name}");
+                    _recentProjects.Remove(existing);
+                }
+
+                Debug.WriteLine("Inserting new project at position 0");
+                _recentProjects.Insert(0, project);
+                
+                while (_recentProjects.Count > 10)
+                {
+                    Debug.WriteLine($"Removing oldest project: {_recentProjects.Last().Name}");
+                    _recentProjects.RemoveAt(_recentProjects.Count - 1);
+                }
+
+                Debug.WriteLine("Saving recent projects...");
+                SaveRecentProjects();
+                Debug.WriteLine("Recent projects saved successfully");
+                
+                Debug.WriteLine($"Final recent projects count: {_recentProjects.Count}");
+                OnPropertyChanged(nameof(RecentProjects));
             }
-
-            // Add to start of list
-            _recentProjects.Insert(0, project);
-            Debug.WriteLine($"Project added. New count: {_recentProjects.Count}");
-
-            // Keep only the last 10 projects
-            while (_recentProjects.Count > 10)
+            catch (Exception ex)
             {
-                _recentProjects.RemoveAt(_recentProjects.Count - 1);
-                Debug.WriteLine("Removed oldest project (limit 10)");
+                Debug.WriteLine($"!!! ERROR IN AddToRecentProjects: {ex.ToString()}");
+                throw;
             }
-
-            SaveRecentProjects();
         }
 
         private async void OnProjectSelected(object sender, SelectionChangedEventArgs e)
@@ -288,9 +273,9 @@ namespace GameEngine.ProjectManager
             };
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public new event PropertyChangedEventHandler? PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
