@@ -1,6 +1,7 @@
 # Yu-Gong Engine
 
 A C#-based physics/game engine
+## Description
 I have always found physics and programming fun, and i have been creating games for quite a while now, 
 so i thought i could utilize both of my skills in physics and programming to create a physics engine.
 
